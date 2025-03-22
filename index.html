@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0d0d2b, #2b0d3d);
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Intro Page */
+        #intro-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: cosmicShift 15s infinite;
+        }
+
+        @keyframes cosmicShift {
+            0% { background: linear-gradient(135deg, #0d0d2b, #2b0d3d); }
+            50% { background: linear-gradient(135deg, #2b0d3d, #0d2b3d); }
+            100% { background: linear-gradient(135deg, #0d0d2b, #2b0d3d); }
+        }
+
+        #intro-page h1 {
+            font-size: 3.5rem;
+            text-shadow: 0 0 15px #ff00ff;
+            margin-bottom: 20px;
+        }
+
+        #intro-page p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+        }
+
+        .convert-btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            background: #ff00ff;
+            border: none;
+            border-radius: 50px;
+            color: #0d0d2b;
+            cursor: pointer;
+            animation: supernova 2s infinite;
+            transition: transform 0.3s;
+        }
+
+        .convert-btn:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes supernova {
+            0% { box-shadow: 0 0 10px #ff00ff; }
+            50% { box-shadow: 0 0 25px #ff00ff, 0 0 50px rgba(255, 0, 255, 0.5); }
+            100% { box-shadow: 0 0 10px #ff00ff; }
+        }
+
+        /* Main Page */
+        #main-page {
+            display: none;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .galactic-interface {
+            width: 90%;
+            max-width: 900px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .planet-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .planet-btn {
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: orbit 5s infinite linear;
+        }
+
+        .planet-btn:hover, .planet-btn.active {
+            background: #00ffff;
+            color: #0d0d2b;
+            transform: scale(1.2);
+            animation: none;
+        }
+
+        @keyframes orbit {
+            0% { transform: rotate(0deg) translateX(10px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(10px) rotate(-360deg); }
+        }
+
+        .upload-zone {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 20px;
+            width: 100%;
+            text-align: center;
+            border: 2px dashed #ff00ff;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+
+        .upload-zone:hover {
+            transform: scale(1.05);
+        }
+
+        .upload-zone input {
+            display: block;
+            margin: 10px auto;
+        }
+
+        .convert-btn-small {
+            padding: 10px 20px;
+            background: #00ffff;
+            border: none;
+            border-radius: 20px;
+            color: #0d0d2b;
+            cursor: pointer;
+        }
+
+        .output-orb {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 20px;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ff00ff;
+            animation: float 3s infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        .download-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #ff00ff;
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #intro-page h1 { font-size: 2.5rem; }
+            .galactic-interface { width: 95%; }
+            .planet-btn { width: 80px; height: 80px; }
+        }
+
+        @media (max-width: 480px) {
+            #intro-page h1 { font-size: 1.8rem; }
+            .convert-btn { font-size: 1rem; padding: 10px 20px; }
+            .planet-selector { gap: 10px; }
+            .planet-btn { width: 60px; height: 60px; font-size: 0.9rem; }
+            .output-orb { max-height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Intro Page -->
+    <div id="intro-page">
+        <h1>Cosmic Converter</h1>
+        <p>Transform Your Files Across the Galaxy</p>
+        <button class="convert-btn" onclick="showMainPage()">Start Converting</button>
+    </div>
+
+    <!-- Main Page -->
+    <div id="main-page">
+        <div class="galactic-interface">
+            <div class="planet-selector">
+                <div class="planet-btn active" onclick="selectConversion('word-to-pdf')">Word to PDF</div>
+                <div class="planet-btn" onclick="selectConversion('pdf-to-word')">PDF to Word</div>
+                <div class="planet-btn" onclick="selectConversion('jpg-to-png')">JPG to PNG</div>
+            </div>
+            <div class="upload-zone">
+                <input type="file" id="file-input" accept=".docx,.pdf,.jpg">
+                <button class="convert-btn-small" onclick="convertFile()">Convert</button>
+            </div>
+            <div class="output-orb" id="output"></div>
+            <button class="download-btn" id="download-btn" style="display: none;" onclick="downloadFile()">Download</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        const { jsPDF } = window.jspdf;
+        let selectedConversion = 'word-to-pdf';
+        let convertedFileName = '';
+
+        function showMainPage() {
+            document.getElementById('intro-page').style.display = 'none';
+            document.getElementById('main-page').style.display = 'flex';
+        }
+
+        function selectConversion(type) {
+            selectedConversion = type;
+            document.querySelectorAll('.planet-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('output').innerHTML = '';
+            document.getElementById('download-btn').style.display = 'none';
+        }
+
+        function convertFile() {
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please upload a file!');
+                return;
+            }
+
+            const fileName = file.name.split('.')[0];
+            let outputText = '';
+            convertedFileName = `${fileName}_converted`;
+
+            // Simulate conversion based on selected type
+            switch (selectedConversion) {
+                case 'word-to-pdf':
+                    outputText = `Simulated Word to PDF conversion of ${file.name}.`;
+                    convertedFileName += '.pdf';
+                    break;
+                case 'pdf-to-word':
+                    outputText = `Simulated PDF to Word conversion of ${file.name}.`;
+                    convertedFileName += '.docx';
+                    break;
+                case 'jpg-to-png':
+                    outputText = `Simulated JPG to PNG conversion of ${file.name}.`;
+                    convertedFileName += '.png';
+                    break;
+            }
+
+            document.getElementById('output').innerHTML = outputText;
+            document.getElementById('download-btn').style.display = 'block';
+        }
+
+        function downloadFile() {
+            if (selectedConversion === 'word-to-pdf') {
+                const doc = new jsPDF();
+                doc.text(document.getElementById('output').innerText, 10, 10);
+                doc.save(convertedFileName);
+            } else {
+                // Simulate other file type downloads (requires backend for real conversion)
+                alert(`Downloading ${convertedFileName} (simulated - add backend for real conversion)`);
+            }
+        }
+    </script>
+</body>
+</html>
