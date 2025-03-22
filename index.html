@@ -28,6 +28,7 @@
             align-items: center;
             text-align: center;
             animation: cosmicShift 15s infinite;
+            position: relative;
         }
 
         @keyframes cosmicShift {
@@ -67,6 +68,22 @@
             0% { box-shadow: 0 0 10px #ff00ff; }
             50% { box-shadow: 0 0 25px #ff00ff, 0 0 50px rgba(255, 0, 255, 0.5); }
             100% { box-shadow: 0 0 10px #ff00ff; }
+        }
+
+        .support-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #00ffff;
+            border-radius: 20px;
+            color: #0d0d2b;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .support-btn:hover {
+            transform: scale(1.1);
         }
 
         /* Main Page */
@@ -197,6 +214,7 @@
             .planet-selector { gap: 10px; }
             .planet-btn { width: 60px; height: 60px; font-size: 0.9rem; }
             .output-orb { max-height: 200px; }
+            .support-btn { font-size: 0.9rem; padding: 8px 15px; }
         }
     </style>
 </head>
@@ -206,6 +224,7 @@
         <h1>Cosmic Converter</h1>
         <p>Transform Your Files Across the Galaxy</p>
         <button class="convert-btn" onclick="showMainPage()">Start Converting</button>
+        <a href="https://buy.stripe.com/00g16Q5xv4Cw05G6oo" class="support-btn">Support Us</a>
     </div>
 
     <!-- Main Page -->
@@ -256,7 +275,6 @@
             let outputText = '';
             convertedFileName = `${fileName}_converted`;
 
-            // Simulate conversion based on selected type
             switch (selectedConversion) {
                 case 'word-to-pdf':
                     outputText = `Simulated Word to PDF conversion of ${file.name}.`;
@@ -282,7 +300,6 @@
                 doc.text(document.getElementById('output').innerText, 10, 10);
                 doc.save(convertedFileName);
             } else {
-                // Simulate other file type downloads (requires backend for real conversion)
                 alert(`Downloading ${convertedFileName} (simulated - add backend for real conversion)`);
             }
         }
