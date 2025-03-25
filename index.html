@@ -19,7 +19,6 @@
             overflow: hidden;
         }
 
-        /* Intro Page */
         #intro-page {
             height: 100vh;
             display: flex;
@@ -92,7 +91,6 @@
             transform: scale(1.1);
         }
 
-        /* Main Page */
         #main-page {
             display: none;
             height: 100vh;
@@ -207,7 +205,6 @@
             transform: scale(1.1);
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             #intro-page h1 { font-size: 2.5rem; }
             .galactic-interface { width: 95%; }
@@ -259,7 +256,7 @@
                 <div class="planet-btn" onclick="selectConversion('video-to-gif')">Video to GIF</div>
             </div>
             <div class="upload-zone">
-                <input type="file" id="file-input" accept=".docx,.pdf,.jpg,.png,.xlsx,.mp4,.html,.csv,.gif,.wav,.md,.txt">
+                <input type="file" id="file-input" accept=".docx">
                 <button class="convert-btn-small" onclick="convertFile()">Convert</button>
             </div>
             <div class="output-orb" id="output"></div>
@@ -272,6 +269,26 @@
         const { jsPDF } = window.jspdf;
         let selectedConversion = 'word-to-pdf';
         let convertedFileName = '';
+        let convertedContent = null;
+
+        // Conversion configuration
+        const conversionConfig = {
+            'word-to-pdf': { input: '.docx', output: '.pdf', mime: 'application/pdf' },
+            'pdf-to-word': { input: '.pdf', output: '.docx', mime: 'text/plain' },
+            'jpg-to-png': { input: '.jpg', output: '.png', mime: 'image/png' },
+            'png-to-jpg': { input: '.png', output: '.jpg', mime: 'image/jpeg' },
+            'excel-to-pdf': { input: '.xlsx', output: '.pdf', mime: 'application/pdf' },
+            'pdf-to-text': { input: '.pdf', output: '.txt', mime: 'text/plain' },
+            'mp4-to-mp3': { input: '.mp4', output: '.mp3', mime: 'audio/mpeg' },
+            'html-to-pdf': { input: '.html', output: '.pdf', mime: 'application/pdf' },
+            'image-to-text': { input: '.jpg,.png', output: '.txt', mime: 'text/plain' },
+            'csv-to-excel': { input: '.csv', output: '.xlsx', mime: 'text/plain' },
+            'gif-to-mp4': { input: '.gif', output: '.mp4', mime: 'video/mp4' },
+            'audio-to-wav': { input: '.mp3,.wav', output: '.wav', mime: 'audio/wav' },
+            'markdown-to-html': { input: '.md', output: '.html', mime: 'text/html' },
+            'text-to-speech': { input: '.txt', output: '.mp3', mime: 'audio/mpeg' },
+            'video-to-gif': { input: '.mp4', output: '.gif', mime: 'image/gif' }
+        };
 
         function showMainPage() {
             document.getElementById('intro-page').style.display = 'none';
@@ -279,142 +296,130 @@
         }
 
         function selectConversion(type) {
+            if (!conversionConfig[type]) {
+                console.error('Invalid conversion type:', type);
+                return;
+            }
             selectedConversion = type;
             document.querySelectorAll('.planet-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             document.getElementById('output').innerHTML = '';
             document.getElementById('download-btn').style.display = 'none';
-            updateFileInputAccept(); // Update accepted file types based on conversion
-        }
-
-        function updateFileInputAccept() {
-            const fileInput = document.getElementById('file-input');
-            const acceptMap = {
-                'word-to-pdf': '.docx',
-                'pdf-to-word': '.pdf',
-                'jpg-to-png': '.jpg',
-                'png-to-jpg': '.png',
-                'excel-to-pdf': '.xlsx',
-                'pdf-to-text': '.pdf',
-                'mp4-to-mp3': '.mp4',
-                'html-to-pdf': '.html',
-                'image-to-text': '.jpg,.png',
-                'csv-to-excel': '.csv',
-                'gif-to-mp4': '.gif',
-                'audio-to-wav': '.mp3,.wav',
-                'markdown-to-html': '.md',
-                'text-to-speech': '.txt',
-                'video-to-gif': '.mp4'
-            };
-            fileInput.accept = acceptMap[selectedConversion] || '*/*';
+            document.getElementById('file-input').accept = conversionConfig[type].input;
+            convertedContent = null; // Reset converted content
         }
 
         function convertFile() {
             const fileInput = document.getElementById('file-input');
             const file = fileInput.files[0];
+            const outputElement = document.getElementById('output');
+            const downloadBtn = document.getElementById('download-btn');
+
+            // Reset previous state
+            outputElement.innerHTML = '';
+            downloadBtn.style.display = 'none';
+            convertedContent = null;
+
             if (!file) {
-                alert('Please upload a file!');
+                outputElement.innerHTML = 'Error: Please upload a file!';
                 return;
             }
 
-            // Validate file type
-            const validExtensions = document.getElementById('file-input').accept.split(',');
             const fileExt = '.' + file.name.split('.').pop().toLowerCase();
-            if (!validExtensions.includes(fileExt) && fileInput.accept !== '*/*') {
-                alert('Invalid file type for this conversion!');
+            const validInputs = conversionConfig[selectedConversion].input.split(',');
+            if (!validInputs.includes(fileExt)) {
+                outputElement.innerHTML = `Error: Invalid file type! Expected ${conversionConfig[selectedConversion].input}`;
                 return;
             }
 
             const fileName = file.name.split('.')[0];
+            convertedFileName = `${fileName}_converted${conversionConfig[selectedConversion].output}`;
             let outputText = '';
-            convertedFileName = `${fileName}_converted`;
 
+            // Simulate conversion based on type
             switch (selectedConversion) {
                 case 'word-to-pdf':
-                    outputText = `Converted ${file.name} to PDF.`;
-                    convertedFileName += '.pdf';
+                case 'excel-to-pdf':
+                case 'html-to-pdf':
+                    outputText = `Converted ${file.name} to PDF format.`;
+                    convertedContent = () => {
+                        const doc = new jsPDF();
+                        doc.text(`Converted from ${file.name}`, 10, 10);
+                        return doc.output('blob');
+                    };
                     break;
                 case 'pdf-to-word':
-                    outputText = `Converted ${file.name} to Word.`;
-                    convertedFileName += '.docx';
+                    outputText = `Converted ${file.name} to Word format (simulated).`;
+                    convertedContent = new Blob([`Simulated Word content from ${file.name}`], { type: 'text/plain' });
                     break;
                 case 'jpg-to-png':
-                    outputText = `Converted ${file.name} to PNG.`;
-                    convertedFileName += '.png';
+                    outputText = `Converted ${file.name} to PNG format (simulated).`;
+                    convertedContent = new Blob([`Simulated PNG data from ${file.name}`], { type: 'image/png' });
                     break;
                 case 'png-to-jpg':
-                    outputText = `Converted ${file.name} to JPG.`;
-                    convertedFileName += '.jpg';
-                    break;
-                case 'excel-to-pdf':
-                    outputText = `Converted ${file.name} to PDF.`;
-                    convertedFileName += '.pdf';
+                    outputText = `Converted ${file.name} to JPG format (simulated).`;
+                    convertedContent = new Blob([`Simulated JPG data from ${file.name}`], { type: 'image/jpeg' });
                     break;
                 case 'pdf-to-text':
-                    outputText = `Extracted text from ${file.name}.`;
-                    convertedFileName += '.txt';
+                case 'image-to-text':
+                    outputText = `Extracted text from ${file.name} (simulated).`;
+                    convertedContent = new Blob([`Simulated text content from ${file.name}`], { type: 'text/plain' });
                     break;
                 case 'mp4-to-mp3':
-                    outputText = `Extracted audio from ${file.name} to MP3.`;
-                    convertedFileName += '.mp3';
-                    break;
-                case 'html-to-pdf':
-                    outputText = `Converted ${file.name} to PDF.`;
-                    convertedFileName += '.pdf';
-                    break;
-                case 'image-to-text':
-                    outputText = `Extracted text from ${file.name}.`;
-                    convertedFileName += '.txt';
+                    outputText = `Extracted audio from ${file.name} to MP3 (simulated).`;
+                    convertedContent = new Blob([`Simulated MP3 data from ${file.name}`], { type: 'audio/mpeg' });
                     break;
                 case 'csv-to-excel':
-                    outputText = `Converted ${file.name} to Excel.`;
-                    convertedFileName += '.xlsx';
+                    outputText = `Converted ${file.name} to Excel format (simulated).`;
+                    convertedContent = new Blob([`Simulated Excel data from ${file.name}`], { type: 'text/plain' });
                     break;
                 case 'gif-to-mp4':
-                    outputText = `Converted ${file.name} to MP4.`;
-                    convertedFileName += '.mp4';
+                    outputText = `Converted ${file.name} to MP4 format (simulated).`;
+                    convertedContent = new Blob([`Simulated MP4 data from ${file.name}`], { type: 'video/mp4' });
                     break;
                 case 'audio-to-wav':
-                    outputText = `Converted ${file.name} to WAV.`;
-                    convertedFileName += '.wav';
+                    outputText = `Converted ${file.name} to WAV format (simulated).`;
+                    convertedContent = new Blob([`Simulated WAV data from ${file.name}`], { type: 'audio/wav' });
                     break;
                 case 'markdown-to-html':
-                    outputText = `Converted ${file.name} to HTML.`;
-                    convertedFileName += '.html';
+                    outputText = `Converted ${file.name} to HTML format (simulated).`;
+                    convertedContent = new Blob([`<html><body>Simulated HTML from ${file.name}</body></html>`], { type: 'text/html' });
                     break;
                 case 'text-to-speech':
-                    outputText = `Converted ${file.name} to audio.`;
-                    convertedFileName += '.mp3';
+                    outputText = `Converted ${file.name} to audio format (simulated).`;
+                    convertedContent = new Blob([`Simulated MP3 audio from ${file.name}`], { type: 'audio/mpeg' });
                     break;
                 case 'video-to-gif':
-                    outputText = `Converted ${file.name} to GIF.`;
-                    convertedFileName += '.gif';
+                    outputText = `Converted ${file.name} to GIF format (simulated).`;
+                    convertedContent = new Blob([`Simulated GIF data from ${file.name}`], { type: 'image/gif' });
                     break;
-                default:
-                    outputText = `Conversion not implemented yet for ${file.name}.`;
             }
 
-            document.getElementById('output').innerHTML = outputText;
-            document.getElementById('download-btn').style.display = 'block';
+            outputElement.innerHTML = outputText;
+            downloadBtn.style.display = 'block';
         }
 
         function downloadFile() {
-            if (selectedConversion === 'word-to-pdf' || selectedConversion === 'excel-to-pdf' || selectedConversion === 'html-to-pdf') {
-                const doc = new jsPDF();
-                doc.text(document.getElementById('output').innerText, 10, 10);
-                doc.save(convertedFileName);
-            } else if (selectedConversion === 'pdf-to-text' || selectedConversion === 'image-to-text' || selectedConversion === 'text-to-speech') {
-                const blob = new Blob([document.getElementById('output').innerText], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = convertedFileName;
-                a.click();
-                URL.revokeObjectURL(url);
-            } else {
-                alert(`Downloading ${convertedFileName} (simulated - backend needed for full conversion)`);
+            if (!convertedContent) {
+                document.getElementById('output').innerHTML = 'Error: No file converted yet!';
+                return;
             }
+
+            const blob = typeof convertedContent === 'function' ? convertedContent() : convertedContent;
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = convertedFileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
+
+        // Initialize with default conversion
+        document.addEventListener('DOMContentLoaded', () => {
+            selectConversion('word-to-pdf');
+        });
     </script>
 </body>
 </html>
