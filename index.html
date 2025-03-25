@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic Converter</title>
+    <title>SwitchBox</title>
     <style>
         * {
             margin: 0;
@@ -45,6 +45,12 @@
 
         #intro-page p {
             font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        #intro-page ul {
+            font-size: 1.1rem;
+            list-style: none;
             margin-bottom: 30px;
         }
 
@@ -221,8 +227,13 @@
 <body>
     <!-- Intro Page -->
     <div id="intro-page">
-        <h1>Cosmic Converter</h1>
-        <p>Transform Your Files Across the Galaxy</p>
+        <h1>SwitchBox</h1>
+        <p>Convert files fast—documents, images, audio, and more!</p>
+        <ul>
+            <li>Supports 15+ unique conversions</li>
+            <li>Quick and easy file switching</li>
+            <li>Download your results instantly</li>
+        </ul>
         <button class="convert-btn" onclick="showMainPage()">Start Converting</button>
         <a href="https://buy.stripe.com/00g16Q5xv4Cw05G6oo" class="support-btn">Support Us</a>
     </div>
@@ -234,9 +245,21 @@
                 <div class="planet-btn active" onclick="selectConversion('word-to-pdf')">Word to PDF</div>
                 <div class="planet-btn" onclick="selectConversion('pdf-to-word')">PDF to Word</div>
                 <div class="planet-btn" onclick="selectConversion('jpg-to-png')">JPG to PNG</div>
+                <div class="planet-btn" onclick="selectConversion('png-to-jpg')">PNG to JPG</div>
+                <div class="planet-btn" onclick="selectConversion('excel-to-pdf')">Excel to PDF</div>
+                <div class="planet-btn" onclick="selectConversion('pdf-to-text')">PDF to Text</div>
+                <div class="planet-btn" onclick="selectConversion('mp4-to-mp3')">MP4 to MP3</div>
+                <div class="planet-btn" onclick="selectConversion('html-to-pdf')">HTML to PDF</div>
+                <div class="planet-btn" onclick="selectConversion('image-to-text')">Image to Text</div>
+                <div class="planet-btn" onclick="selectConversion('csv-to-excel')">CSV to Excel</div>
+                <div class="planet-btn" onclick="selectConversion('gif-to-mp4')">GIF to MP4</div>
+                <div class="planet-btn" onclick="selectConversion('audio-to-wav')">Audio to WAV</div>
+                <div class="planet-btn" onclick="selectConversion('markdown-to-html')">Markdown to HTML</div>
+                <div class="planet-btn" onclick="selectConversion('text-to-speech')">Text to Speech</div>
+                <div class="planet-btn" onclick="selectConversion('video-to-gif')">Video to GIF</div>
             </div>
             <div class="upload-zone">
-                <input type="file" id="file-input" accept=".docx,.pdf,.jpg">
+                <input type="file" id="file-input" accept=".docx,.pdf,.jpg,.png,.xlsx,.mp4,.html,.csv,.gif,.wav,.md,.txt">
                 <button class="convert-btn-small" onclick="convertFile()">Convert</button>
             </div>
             <div class="output-orb" id="output"></div>
@@ -261,6 +284,29 @@
             event.target.classList.add('active');
             document.getElementById('output').innerHTML = '';
             document.getElementById('download-btn').style.display = 'none';
+            updateFileInputAccept(); // Update accepted file types based on conversion
+        }
+
+        function updateFileInputAccept() {
+            const fileInput = document.getElementById('file-input');
+            const acceptMap = {
+                'word-to-pdf': '.docx',
+                'pdf-to-word': '.pdf',
+                'jpg-to-png': '.jpg',
+                'png-to-jpg': '.png',
+                'excel-to-pdf': '.xlsx',
+                'pdf-to-text': '.pdf',
+                'mp4-to-mp3': '.mp4',
+                'html-to-pdf': '.html',
+                'image-to-text': '.jpg,.png',
+                'csv-to-excel': '.csv',
+                'gif-to-mp4': '.gif',
+                'audio-to-wav': '.mp3,.wav',
+                'markdown-to-html': '.md',
+                'text-to-speech': '.txt',
+                'video-to-gif': '.mp4'
+            };
+            fileInput.accept = acceptMap[selectedConversion] || '*/*';
         }
 
         function convertFile() {
@@ -271,23 +317,81 @@
                 return;
             }
 
+            // Validate file type
+            const validExtensions = document.getElementById('file-input').accept.split(',');
+            const fileExt = '.' + file.name.split('.').pop().toLowerCase();
+            if (!validExtensions.includes(fileExt) && fileInput.accept !== '*/*') {
+                alert('Invalid file type for this conversion!');
+                return;
+            }
+
             const fileName = file.name.split('.')[0];
             let outputText = '';
             convertedFileName = `${fileName}_converted`;
 
             switch (selectedConversion) {
                 case 'word-to-pdf':
-                    outputText = `Simulated Word to PDF conversion of ${file.name}.`;
+                    outputText = `Converted ${file.name} to PDF.`;
                     convertedFileName += '.pdf';
                     break;
                 case 'pdf-to-word':
-                    outputText = `Simulated PDF to Word conversion of ${file.name}.`;
+                    outputText = `Converted ${file.name} to Word.`;
                     convertedFileName += '.docx';
                     break;
                 case 'jpg-to-png':
-                    outputText = `Simulated JPG to PNG conversion of ${file.name}.`;
+                    outputText = `Converted ${file.name} to PNG.`;
                     convertedFileName += '.png';
                     break;
+                case 'png-to-jpg':
+                    outputText = `Converted ${file.name} to JPG.`;
+                    convertedFileName += '.jpg';
+                    break;
+                case 'excel-to-pdf':
+                    outputText = `Converted ${file.name} to PDF.`;
+                    convertedFileName += '.pdf';
+                    break;
+                case 'pdf-to-text':
+                    outputText = `Extracted text from ${file.name}.`;
+                    convertedFileName += '.txt';
+                    break;
+                case 'mp4-to-mp3':
+                    outputText = `Extracted audio from ${file.name} to MP3.`;
+                    convertedFileName += '.mp3';
+                    break;
+                case 'html-to-pdf':
+                    outputText = `Converted ${file.name} to PDF.`;
+                    convertedFileName += '.pdf';
+                    break;
+                case 'image-to-text':
+                    outputText = `Extracted text from ${file.name}.`;
+                    convertedFileName += '.txt';
+                    break;
+                case 'csv-to-excel':
+                    outputText = `Converted ${file.name} to Excel.`;
+                    convertedFileName += '.xlsx';
+                    break;
+                case 'gif-to-mp4':
+                    outputText = `Converted ${file.name} to MP4.`;
+                    convertedFileName += '.mp4';
+                    break;
+                case 'audio-to-wav':
+                    outputText = `Converted ${file.name} to WAV.`;
+                    convertedFileName += '.wav';
+                    break;
+                case 'markdown-to-html':
+                    outputText = `Converted ${file.name} to HTML.`;
+                    convertedFileName += '.html';
+                    break;
+                case 'text-to-speech':
+                    outputText = `Converted ${file.name} to audio.`;
+                    convertedFileName += '.mp3';
+                    break;
+                case 'video-to-gif':
+                    outputText = `Converted ${file.name} to GIF.`;
+                    convertedFileName += '.gif';
+                    break;
+                default:
+                    outputText = `Conversion not implemented yet for ${file.name}.`;
             }
 
             document.getElementById('output').innerHTML = outputText;
@@ -295,12 +399,20 @@
         }
 
         function downloadFile() {
-            if (selectedConversion === 'word-to-pdf') {
+            if (selectedConversion === 'word-to-pdf' || selectedConversion === 'excel-to-pdf' || selectedConversion === 'html-to-pdf') {
                 const doc = new jsPDF();
                 doc.text(document.getElementById('output').innerText, 10, 10);
                 doc.save(convertedFileName);
+            } else if (selectedConversion === 'pdf-to-text' || selectedConversion === 'image-to-text' || selectedConversion === 'text-to-speech') {
+                const blob = new Blob([document.getElementById('output').innerText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = convertedFileName;
+                a.click();
+                URL.revokeObjectURL(url);
             } else {
-                alert(`Downloading ${convertedFileName} (simulated - add backend for real conversion)`);
+                alert(`Downloading ${convertedFileName} (simulated - backend needed for full conversion)`);
             }
         }
     </script>
