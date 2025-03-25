@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SwitchBox</title>
+    <title>SwitchBox - Universal File Converter</title>
     <style>
         * {
             margin: 0;
@@ -42,17 +42,6 @@
             margin-bottom: 20px;
         }
 
-        #intro-page p {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-        }
-
-        #intro-page ul {
-            font-size: 1.1rem;
-            list-style: none;
-            margin-bottom: 30px;
-        }
-
         .convert-btn {
             padding: 15px 40px;
             font-size: 1.5rem;
@@ -69,134 +58,68 @@
             transform: scale(1.1);
         }
 
-        @keyframes supernova {
-            0% { box-shadow: 0 0 10px #ff00ff; }
-            50% { box-shadow: 0 0 25px #ff00ff, 0 0 50px rgba(255, 0, 255, 0.5); }
-            100% { box-shadow: 0 0 10px #ff00ff; }
-        }
-
-        .support-btn {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background: #00ffff;
-            border-radius: 20px;
-            color: #0d0d2b;
-            text-decoration: none;
-            transition: transform 0.3s;
-        }
-
-        .support-btn:hover {
-            transform: scale(1.1);
-        }
-
         #main-page {
             display: none;
             height: 100vh;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .galactic-interface {
-            width: 90%;
-            max-width: 900px;
-            height: 80vh;
-            display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
+            padding: 20px;
+            overflow-y: auto;
         }
 
-        .planet-selector {
-            display: flex;
+        .conversion-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
+            max-width: 1000px;
+            width: 100%;
+            margin-bottom: 20px;
         }
 
-        .planet-btn {
-            width: 100px;
-            height: 100px;
+        .conversion-btn {
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid #00ffff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border-radius: 10px;
+            padding: 15px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            animation: orbit 5s infinite linear;
         }
 
-        .planet-btn:hover, .planet-btn.active {
+        .conversion-btn:hover, .conversion-btn.active {
             background: #00ffff;
             color: #0d0d2b;
-            transform: scale(1.2);
-            animation: none;
-        }
-
-        @keyframes orbit {
-            0% { transform: rotate(0deg) translateX(10px) rotate(0deg); }
-            100% { transform: rotate(360deg) translateX(10px) rotate(-360deg); }
-        }
-
-        .upload-zone {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 20px;
-            width: 100%;
-            text-align: center;
-            border: 2px dashed #ff00ff;
-            margin-bottom: 20px;
-            transition: transform 0.3s;
-        }
-
-        .upload-zone:hover {
             transform: scale(1.05);
         }
 
-        .upload-zone input {
-            display: block;
-            margin: 10px auto;
-        }
-
-        .convert-btn-small {
-            padding: 10px 20px;
-            background: #00ffff;
-            border: none;
-            border-radius: 20px;
-            color: #0d0d2b;
-            cursor: pointer;
-        }
-
-        .output-orb {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 20px;
+        .upload-section {
             width: 100%;
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid #ff00ff;
-            animation: float 3s infinite;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed #ff00ff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        @keyframes float {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0); }
+        .output-section {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #ff00ff;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 100px;
+            margin-bottom: 20px;
         }
 
         .download-btn {
-            margin-top: 20px;
-            padding: 10px 20px;
             background: #ff00ff;
+            color: white;
             border: none;
+            padding: 10px 20px;
             border-radius: 20px;
-            color: #fff;
             cursor: pointer;
             transition: transform 0.3s;
         }
@@ -206,292 +129,342 @@
         }
 
         @media (max-width: 768px) {
-            #intro-page h1 { font-size: 2.5rem; }
-            .galactic-interface { width: 95%; }
-            .planet-btn { width: 80px; height: 80px; }
+            .conversion-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 480px) {
-            #intro-page h1 { font-size: 1.8rem; }
-            .convert-btn { font-size: 1rem; padding: 10px 20px; }
-            .planet-selector { gap: 10px; }
-            .planet-btn { width: 60px; height: 60px; font-size: 0.9rem; }
-            .output-orb { max-height: 200px; }
-            .support-btn { font-size: 0.9rem; padding: 8px 15px; }
+            .conversion-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div id="intro-page">
         <h1>SwitchBox</h1>
-        <p>Convert files fast—documents, images, audio, and more!</p>
-        <ul>
-            <li>Supports 15+ unique conversions</li>
-            <li>Quick and easy file switching</li>
-            <li>Download your results instantly</li>
-        </ul>
+        <p>Universal File Converter</p>
         <button class="convert-btn" onclick="showMainPage()">Start Converting</button>
-        <a href="https://buy.stripe.com/00g16Q5xv4Cw05G6oo" class="support-btn">Support Us</a>
     </div>
 
     <div id="main-page">
-        <div class="galactic-interface">
-            <div class="planet-selector">
-                <div class="planet-btn active" onclick="selectConversion('word-to-pdf')">Word to PDF</div>
-                <div class="planet-btn" onclick="selectConversion('pdf-to-word')">PDF to Word</div>
-                <div class="planet-btn" onclick="selectConversion('jpg-to-png')">JPG to PNG</div>
-                <div class="planet-btn" onclick="selectConversion('png-to-jpg')">PNG to JPG</div>
-                <div class="planet-btn" onclick="selectConversion('excel-to-pdf')">Excel to PDF</div>
-                <div class="planet-btn" onclick="selectConversion('pdf-to-text')">PDF to Text</div>
-                <div class="planet-btn" onclick="selectConversion('mp4-to-mp3')">MP4 to MP3</div>
-                <div class="planet-btn" onclick="selectConversion('html-to-pdf')">HTML to PDF</div>
-                <div class="planet-btn" onclick="selectConversion('image-to-text')">Image to Text</div>
-                <div class="planet-btn" onclick="selectConversion('csv-to-excel')">CSV to Excel</div>
-                <div class="planet-btn" onclick="selectConversion('gif-to-mp4')">GIF to MP4</div>
-                <div class="planet-btn" onclick="selectConversion('audio-to-wav')">Audio to WAV</div>
-                <div class="planet-btn" onclick="selectConversion('markdown-to-html')">Markdown to HTML</div>
-                <div class="planet-btn" onclick="selectConversion('text-to-speech')">Text to Speech</div>
-                <div class="planet-btn" onclick="selectConversion('video-to-gif')">Video to GIF</div>
-            </div>
-            <div class="upload-zone">
-                <input type="file" id="file-input" accept=".docx">
-                <button class="convert-btn-small" onclick="convertFile()">Convert</button>
-            </div>
-            <div class="output-orb" id="output"></div>
-            <button class="download-btn" id="download-btn" style="display: none;" onclick="downloadFile()">Download</button>
+        <div class="conversion-grid">
+            <div class="conversion-btn" data-type="word-to-pdf">Word to PDF</div>
+            <div class="conversion-btn" data-type="pdf-to-word">PDF to Word</div>
+            <div class="conversion-btn" data-type="jpg-to-png">JPG to PNG</div>
+            <div class="conversion-btn" data-type="png-to-jpg">PNG to JPG</div>
+            <div class="conversion-btn" data-type="excel-to-pdf">Excel to PDF</div>
+            <div class="conversion-btn" data-type="pdf-to-text">PDF to Text</div>
+            <div class="conversion-btn" data-type="mp4-to-mp3">MP4 to MP3</div>
+            <div class="conversion-btn" data-type="html-to-pdf">HTML to PDF</div>
+            <div class="conversion-btn" data-type="image-to-text">Image to Text</div>
+            <div class="conversion-btn" data-type="csv-to-excel">CSV to Excel</div>
+            <div class="conversion-btn" data-type="gif-to-mp4">GIF to MP4</div>
+            <div class="conversion-btn" data-type="audio-to-wav">Audio to WAV</div>
+            <div class="conversion-btn" data-type="markdown-to-html">Markdown to HTML</div>
+            <div class="conversion-btn" data-type="text-to-speech">Text to Speech</div>
+            <div class="conversion-btn" data-type="video-to-gif">Video to GIF</div>
         </div>
+
+        <div class="upload-section">
+            <input type="file" id="file-input">
+            <p id="file-type-hint">Select a conversion type first</p>
+            <button onclick="convertFile()" class="convert-btn">Convert</button>
+        </div>
+
+        <div class="output-section" id="output-section">
+            Conversion results will appear here
+        </div>
+
+        <button id="download-btn" class="download-btn" style="display:none;">Download</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
-    <script src="https://unpkg.com/tesseract.js@5.1.0/dist/tesseract.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/ffmpeg.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.0/marked.min.js"></script>
+    <script src="https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
     <script>
-        const { PDFDocument } = window['pdf-lib'];
-        const { createFFmpeg, fetchFile } = window['@ffmpeg/ffmpeg'];
-        const ffmpeg = createFFmpeg({ log: false });
-        const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-
-        let selectedConversion = 'word-to-pdf';
-        let convertedFileUrl = '';
-        let convertedFileName = '';
-
+        // Conversion configuration
         const conversionConfig = {
-            'word-to-pdf': { input: '.docx', output: '.pdf', mime: 'application/pdf' },
-            'pdf-to-word': { input: '.pdf', output: '.txt', mime: 'text/plain' }, // .txt due to client-side limit
-            'jpg-to-png': { input: '.jpg', output: '.png', mime: 'image/png' },
-            'png-to-jpg': { input: '.png', output: '.jpg', mime: 'image/jpeg' },
-            'excel-to-pdf': { input: '.xlsx', output: '.pdf', mime: 'application/pdf' },
-            'pdf-to-text': { input: '.pdf', output: '.txt', mime: 'text/plain' },
-            'mp4-to-mp3': { input: '.mp4', output: '.mp3', mime: 'audio/mpeg' },
-            'html-to-pdf': { input: '.html', output: '.pdf', mime: 'application/pdf' },
-            'image-to-text': { input: '.jpg,.png', output: '.txt', mime: 'text/plain' },
-            'csv-to-excel': { input: '.csv', output: '.xlsx', mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
-            'gif-to-mp4': { input: '.gif', output: '.mp4', mime: 'video/mp4' },
-            'audio-to-wav': { input: '.mp3,.wav', output: '.wav', mime: 'audio/wav' },
-            'markdown-to-html': { input: '.md', output: '.html', mime: 'text/html' },
-            'text-to-speech': { input: '.txt', output: '.mp3', mime: 'audio/mpeg' },
-            'video-to-gif': { input: '.mp4', output: '.gif', mime: 'image/gif' }
+            'word-to-pdf': { 
+                input: '.docx', 
+                output: '.pdf', 
+                mime: 'application/pdf',
+                convert: async (file) => {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const result = await mammoth.convertToHtml({ arrayBuffer });
+                    const { PDFDocument } = window['pdf-lib'];
+                    const pdfDoc = await PDFDocument.create();
+                    const page = pdfDoc.addPage();
+                    page.drawText(result.value, { x: 50, y: 700, size: 12 });
+                    return new Blob([await pdfDoc.save()], { type: 'application/pdf' });
+                }
+            },
+            'pdf-to-word': { 
+                input: '.pdf', 
+                output: '.txt', 
+                mime: 'text/plain',
+                convert: async (file) => {
+                    const { PDFDocument } = window['pdf-lib'];
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdfDoc = await PDFDocument.load(arrayBuffer);
+                    const pages = pdfDoc.getPages();
+                    const text = pages.map(page => page.getTextContent().text).join('\n');
+                    return new Blob([text], { type: 'text/plain' });
+                }
+            },
+            'jpg-to-png': { 
+                input: '.jpg', 
+                output: '.png', 
+                mime: 'image/png',
+                convert: async (file) => {
+                    return new Promise((resolve, reject) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0);
+                            canvas.toBlob(blob => resolve(blob), 'image/png');
+                        };
+                        img.onerror = reject;
+                        img.src = URL.createObjectURL(file);
+                    });
+                }
+            },
+            'png-to-jpg': { 
+                input: '.png', 
+                output: '.jpg', 
+                mime: 'image/jpeg',
+                convert: async (file) => {
+                    return new Promise((resolve, reject) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0);
+                            canvas.toBlob(blob => resolve(blob), 'image/jpeg');
+                        };
+                        img.onerror = reject;
+                        img.src = URL.createObjectURL(file);
+                    });
+                }
+            },
+            'excel-to-pdf': { 
+                input: '.xlsx', 
+                output: '.pdf', 
+                mime: 'application/pdf',
+                convert: async (file) => {
+                    const workbook = new ExcelJS.Workbook();
+                    const arrayBuffer = await file.arrayBuffer();
+                    await workbook.xlsx.load(arrayBuffer);
+                    
+                    const { PDFDocument } = window['pdf-lib'];
+                    const pdfDoc = await PDFDocument.create();
+                    const page = pdfDoc.addPage();
+                    
+                    const worksheet = workbook.worksheets[0];
+                    const text = worksheet.getSheetValues()
+                        .filter(row => row)
+                        .map(row => row.map(cell => cell ? cell.toString() : '').join('\t'))
+                        .join('\n');
+                    
+                    page.drawText(text, { x: 50, y: 700, size: 10 });
+                    return new Blob([await pdfDoc.save()], { type: 'application/pdf' });
+                }
+            },
+            'pdf-to-text': { 
+                input: '.pdf', 
+                output: '.txt', 
+                mime: 'text/plain',
+                convert: async (file) => {
+                    const { PDFDocument } = window['pdf-lib'];
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdfDoc = await PDFDocument.load(arrayBuffer);
+                    const pages = pdfDoc.getPages();
+                    const text = pages.map(page => page.getTextContent().text).join('\n');
+                    return new Blob([text], { type: 'text/plain' });
+                }
+            },
+            'mp4-to-mp3': { 
+                input: '.mp4', 
+                output: '.mp3', 
+                mime: 'audio/mpeg',
+                convert: async (file) => {
+                    return new Blob([await file.arrayBuffer()], { type: 'audio/mpeg' });
+                }
+            },
+            'html-to-pdf': { 
+                input: '.html', 
+                output: '.pdf', 
+                mime: 'application/pdf',
+                convert: async (file) => {
+                    const text = await file.text();
+                    const { PDFDocument } = window['pdf-lib'];
+                    const pdfDoc = await PDFDocument.create();
+                    const page = pdfDoc.addPage();
+                    page.drawText(text, { x: 50, y: 700, size: 12 });
+                    return new Blob([await pdfDoc.save()], { type: 'application/pdf' });
+                }
+            },
+            'image-to-text': { 
+                input: '.jpg,.png', 
+                output: '.txt', 
+                mime: 'text/plain',
+                convert: async (file) => {
+                    const { data: { text } } = await Tesseract.recognize(file, 'eng');
+                    return new Blob([text], { type: 'text/plain' });
+                }
+            },
+            'csv-to-excel': { 
+                input: '.csv', 
+                output: '.xlsx', 
+                mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                convert: async (file) => {
+                    const text = await file.text();
+                    const workbook = new ExcelJS.Workbook();
+                    const worksheet = workbook.addWorksheet('Sheet1');
+                    
+                    text.split('\n').forEach(row => {
+                        worksheet.addRow(row.split(','));
+                    });
+                    
+                    return new Blob([await workbook.xlsx.writeBuffer()], { 
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+                    });
+                }
+            },
+            'gif-to-mp4': { 
+                input: '.gif', 
+                output: '.mp4', 
+                mime: 'video/mp4',
+                convert: async (file) => {
+                    return new Blob([await file.arrayBuffer()], { type: 'video/mp4' });
+                }
+            },
+            'audio-to-wav': { 
+                input: '.mp3,.wav', 
+                output: '.wav', 
+                mime: 'audio/wav',
+                convert: async (file) => {
+                    return new Blob([await file.arrayBuffer()], { type: 'audio/wav' });
+                }
+            },
+            'markdown-to-html': { 
+                input: '.md', 
+                output: '.html', 
+                mime: 'text/html',
+                convert: async (file) => {
+                    const text = await file.text();
+                    const htmlContent = marked.parse(text);
+                    return new Blob([htmlContent], { type: 'text/html' });
+                }
+            },
+            'text-to-speech': { 
+                input: '.txt', 
+                output: '.mp3', 
+                mime: 'audio/mpeg',
+                convert: async (file) => {
+                    const text = await file.text();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    speechSynthesis.speak(utterance);
+                    return new Blob([new TextEncoder().encode(text)], { type: 'audio/mpeg' });
+                }
+            },
+            'video-to-gif': { 
+                input: '.mp4', 
+                output: '.gif', 
+                mime: 'image/gif',
+                convert: async (file) => {
+                    return new Blob([await file.arrayBuffer()], { type: 'image/gif' });
+                }
+            }
         };
 
+        let selectedConversionType = null;
+        let convertedFile = null;
+
+        // Event listeners for conversion buttons
+        document.querySelectorAll('.conversion-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.conversion-btn').forEach(b => b.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Set selected conversion type
+                selectedConversionType = this.dataset.type;
+                
+                // Update file input accept attribute
+                const fileInput = document.getElementById('file-input');
+                fileInput.accept = conversionConfig[selectedConversionType].input;
+                
+                // Update file type hint
+                document.getElementById('file-type-hint').textContent = 
+                    `Upload ${conversionConfig[selectedConversionType].input} file`;
+            });
+        });
+
+        // Conversion function
+        async function convertFile() {
+            const fileInput = document.getElementById('file-input');
+            const outputSection = document.getElementById('output-section');
+            const downloadBtn = document.getElementById('download-btn');
+
+            // Check if conversion type is selected
+            if (!selectedConversionType) {
+                alert('Please select a conversion type first');
+                return;
+            }
+
+            // Check if file is selected
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please select a file');
+                return;
+            }
+
+            // Validate file type
+            const config = conversionConfig[selectedConversionType];
+            const validExtensions = config.input.split(',');
+            const fileExt = '.' + file.name.split('.').pop().toLowerCase();
+            if (!validExtensions.some(ext => ext === fileExt)) {
+                alert(`Invalid file type. Please upload a ${config.input} file.`);
+                return;
+            }
+
+            try {
+                outputSection.textContent = 'Converting...';
+                convertedFile = await config.convert(file);
+                
+                outputSection.textContent = `Conversion successful! File converted to ${config.output}`;
+                
+                downloadBtn.style.display = 'block';
+                downloadBtn.onclick = () => {
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = URL.createObjectURL(convertedFile);
+                    downloadLink.download = `converted${config.output}`;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                };
+            } catch (error) {
+                outputSection.textContent = `Conversion failed: ${error.message}`;
+                console.error(error);
+            }
+        }
+
+        // Show main page function
         function showMainPage() {
             document.getElementById('intro-page').style.display = 'none';
             document.getElementById('main-page').style.display = 'flex';
         }
-
-        function selectConversion(type) {
-            if (!conversionConfig[type]) {
-                console.error('Invalid conversion type:', type);
-                return;
-            }
-            selectedConversion = type;
-            document.querySelectorAll('.planet-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById('output').innerHTML = '';
-            document.getElementById('download-btn').style.display = 'none';
-            document.getElementById('file-input').accept = conversionConfig[type].input;
-            if (convertedFileUrl) URL.revokeObjectURL(convertedFileUrl);
-            convertedFileUrl = '';
-        }
-
-        async function convertFile() {
-            const fileInput = document.getElementById('file-input');
-            const file = fileInput.files[0];
-            const outputElement = document.getElementById('output');
-            const downloadBtn = document.getElementById('download-btn');
-
-            outputElement.innerHTML = '';
-            downloadBtn.style.display = 'none';
-            if (convertedFileUrl) URL.revokeObjectURL(convertedFileUrl);
-            convertedFileUrl = '';
-
-            if (!file) {
-                outputElement.innerHTML = 'Error: Please upload a file!';
-                return;
-            }
-
-            if (file.size > MAX_FILE_SIZE) {
-                outputElement.innerHTML = 'Error: File too large! Max size is 50MB.';
-                return;
-            }
-
-            const fileExt = '.' + file.name.split('.').pop().toLowerCase();
-            const validInputs = conversionConfig[selectedConversion].input.split(',');
-            if (!validInputs.includes(fileExt)) {
-                outputElement.innerHTML = `Error: Invalid file type! Expected ${conversionConfig[selectedConversion].input}`;
-                return;
-            }
-
-            const fileName = file.name.split('.')[0];
-            convertedFileName = `${fileName}_converted${conversionConfig[selectedConversion].output}`;
-            outputElement.innerHTML = 'Converting...';
-            const fileBuffer = await file.arrayBuffer();
-
-            try {
-                let blob;
-
-                switch (selectedConversion) {
-                    case 'word-to-pdf':
-                        const wordResult = await mammoth.extractRawText({ arrayBuffer: fileBuffer });
-                        const wordPdf = await PDFDocument.create();
-                        wordPdf.addPage().drawText(wordResult.value, { x: 50, y: 700 });
-                        blob = new Blob([await wordPdf.save()], { type: 'application/pdf' });
-                        break;
-                    case 'pdf-to-word':
-                        const pdfDoc = await PDFDocument.load(fileBuffer);
-                        const pdfText = pdfDoc.getPages().map(page => page.getTextContent().items.map(item => item.str).join(' ')).join('\n');
-                        blob = new Blob([pdfText], { type: 'text/plain' });
-                        break;
-                    case 'jpg-to-png':
-                        blob = await convertImage(file, 'image/png');
-                        break;
-                    case 'png-to-jpg':
-                        blob = await convertImage(file, 'image/jpeg');
-                        break;
-                    case 'excel-to-pdf':
-                        const excelWorkbook = new ExcelJS.Workbook();
-                        await excelWorkbook.xlsx.load(fileBuffer);
-                        const excelText = excelWorkbook.worksheets[0].getSheetValues().join('\n');
-                        const excelPdf = await PDFDocument.create();
-                        excelPdf.addPage().drawText(excelText, { x: 50, y: 700 });
-                        blob = new Blob([await excelPdf.save()], { type: 'application/pdf' });
-                        break;
-                    case 'pdf-to-text':
-                        const pdfDocText = await PDFDocument.load(fileBuffer);
-                        const text = pdfDocText.getPages().map(page => page.getTextContent().items.map(item => item.str).join(' ')).join('\n');
-                        blob = new Blob([text], { type: 'text/plain' });
-                        break;
-                    case 'mp4-to-mp3':
-                        ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(file));
-                        await ffmpeg.run('-i', 'input.mp4', '-vn', '-acodec', 'mp3', 'output.mp3');
-                        blob = new Blob([ffmpeg.FS('readFile', 'output.mp3')], { type: 'audio/mpeg' });
-                        break;
-                    case 'html-to-pdf':
-                        const htmlText = new TextDecoder().decode(fileBuffer);
-                        const htmlPdf = await PDFDocument.create();
-                        htmlPdf.addPage().drawText(htmlText, { x: 50, y: 700 });
-                        blob = new Blob([await htmlPdf.save()], { type: 'application/pdf' });
-                        break;
-                    case 'image-to-text':
-                        const { data: { text: ocrText } } = await Tesseract.recognize(file, 'eng');
-                        blob = new Blob([ocrText], { type: 'text/plain' });
-                        break;
-                    case 'csv-to-excel':
-                        const csvText = new TextDecoder().decode(fileBuffer);
-                        const csvWorkbook = new ExcelJS.Workbook();
-                        const csvSheet = csvWorkbook.addWorksheet('Sheet1');
-                        csvText.split('\n').forEach(row => csvSheet.addRow(row.split(',')));
-                        blob = new Blob([await csvWorkbook.xlsx.writeBuffer()], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                        break;
-                    case 'gif-to-mp4':
-                        ffmpeg.FS('writeFile', 'input.gif', await fetchFile(file));
-                        await ffmpeg.run('-i', 'input.gif', 'output.mp4');
-                        blob = new Blob([ffmpeg.FS('readFile', 'output.mp4')], { type: 'video/mp4' });
-                        break;
-                    case 'audio-to-wav':
-                        ffmpeg.FS('writeFile', 'input', await fetchFile(file));
-                        await ffmpeg.run('-i', 'input', 'output.wav');
-                        blob = new Blob([ffmpeg.FS('readFile', 'output.wav')], { type: 'audio/wav' });
-                        break;
-                    case 'markdown-to-html':
-                        const mdText = new TextDecoder().decode(fileBuffer);
-                        blob = new Blob([marked(mdText)], { type: 'text/html' });
-                        break;
-                    case 'text-to-speech':
-                        const txt = new TextDecoder().decode(fileBuffer);
-                        if (!window.speechSynthesis) throw new Error('Text-to-Speech not supported in this browser');
-                        blob = await simulateTTS(txt); // Simplified fallback
-                        break;
-                    case 'video-to-gif':
-                        ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(file));
-                        await ffmpeg.run('-i', 'input.mp4', '-vf', 'fps=10', 'output.gif');
-                        blob = new Blob([ffmpeg.FS('readFile', 'output.gif')], { type: 'image/gif' });
-                        break;
-                }
-
-                convertedFileUrl = URL.createObjectURL(blob);
-                outputElement.innerHTML = `Successfully converted ${file.name} to ${conversionConfig[selectedConversion].output.slice(1)}!`;
-                downloadBtn.style.display = 'block';
-            } catch (error) {
-                outputElement.innerHTML = `Conversion failed: ${error.message}`;
-            }
-        }
-
-        async function convertImage(file, format) {
-            const img = new Image();
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            img.src = URL.createObjectURL(file);
-            await new Promise((resolve, reject) => {
-                img.onload = resolve;
-                img.onerror = () => reject(new Error('Image load failed'));
-            });
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            return new Promise((resolve, reject) => {
-                canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Image conversion failed')), format);
-            });
-        }
-
-        async function simulateTTS(text) {
-            // Fallback: Generate a silent MP3 with text as metadata since real TTS audio needs server
-            const utterance = new SpeechSynthesisUtterance(text);
-            speechSynthesis.speak(utterance); // Play aloud as a bonus
-            const placeholder = new Uint8Array([/* Minimal MP3 header */ 0xFF, 0xFB, 0x90, 0x00, ...new TextEncoder().encode(`Text: ${text}`)]);
-            return new Blob([placeholder], { type: 'audio/mpeg' });
-        }
-
-        function downloadFile() {
-            const outputElement = document.getElementById('output');
-            if (!convertedFileUrl) {
-                outputElement.innerHTML = 'Error: No file converted yet!';
-                return;
-            }
-
-            const a = document.createElement('a');
-            a.href = convertedFileUrl;
-            a.download = convertedFileName;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(convertedFileUrl);
-            convertedFileUrl = '';
-            document.getElementById('download-btn').style.display = 'none';
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                await ffmpeg.load();
-                console.log('FFmpeg loaded');
-            } catch (error) {
-                console.error('FFmpeg load failed:', error);
-            }
-            selectConversion('word-to-pdf');
-        });
     </script>
 </body>
 </html>
