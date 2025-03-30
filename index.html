@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SwitchBox - Universal File Converter</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -164,7 +164,8 @@
 
         #text-input {
             width: 100%;
-            min-height: 200px;
+            min-height: 150px;
+            max-height: 50vh;
             padding: 10px;
             background: rgba(255, 255, 255, 0.1);
             color: var(--text-color);
@@ -172,6 +173,8 @@
             border-radius: 5px;
             resize: vertical;
             font-family: 'Montserrat', sans-serif;
+            font-size: 16px; /* Base font size for better mobile readability */
+            touch-action: manipulation;
         }
 
         @media (max-width: 768px) {
@@ -182,6 +185,12 @@
             .conversion-btn {
                 font-size: 0.8rem;
                 padding: 10px;
+            }
+            
+            #text-input {
+                min-height: 120px;
+                max-height: 40vh;
+                font-size: 16px;
             }
         }
 
@@ -201,6 +210,17 @@
 
             .primary-btn {
                 padding: 10px 30px;
+            }
+            
+            #text-input {
+                min-height: 100px;
+                max-height: 35vh;
+                padding: 8px;
+                font-size: 16px; /* Keep 16px as it's the ideal size for mobile input */
+            }
+            
+            #text-input-container {
+                max-width: 100%; /* Full width on very small screens */
             }
         }
     </style>
@@ -406,6 +426,11 @@
                 if (selectedConversionType === 'text-to-pdf') {
                     fileInputSection.style.display = 'none';
                     textInputContainer.style.display = 'block';
+                    // Focus the textarea with a slight delay to ensure display is complete
+                    setTimeout(() => {
+                        const textInput = document.getElementById('text-input');
+                        textInput.focus();
+                    }, 100);
                 } else {
                     fileInputSection.style.display = 'block';
                     textInputContainer.style.display = 'none';
@@ -495,9 +520,19 @@
             document.getElementById('main-page').style.display = 'flex';
         }
 
+        // Improve mobile input handling
         document.addEventListener('touchmove', function(event) {
             if (event.scale !== 1) event.preventDefault();
         }, { passive: false });
+        
+        // Prevent zoom when focusing textarea
+        document.getElementById('text-input').addEventListener('focus', function(event) {
+            document.body.style.touchAction = 'none';
+        });
+        
+        document.getElementById('text-input').addEventListener('blur', function(event) {
+            document.body.style.touchAction = 'manipulation';
+        });
     </script>
 </body>
 </html>
